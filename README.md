@@ -14,4 +14,9 @@ name, peak performance, peak bandwidth
 
 ## How to run 
 
+Peak bandwidth must be specified in GB/s
+Peak performance must be specified in GFLOP/s
+Arithemtic intensity is specified in FLOP/byte
+Performance is specified in GFLOP/s
+
 python3 roofline.py -i hw.csv -a apps.csv

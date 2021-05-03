@@ -30,7 +30,7 @@ import matplotlib
 
 # Constants
 # The following constants define the span of the intensity axis
-START = -2
+START = -3
 STOP = 4
 N = abs(STOP - START + 1)
 
@@ -64,7 +64,7 @@ def process(hw_platforms, sw_apps, xkcd):
     assert isinstance(xkcd, bool)
 
     # arithmetic intensity
-    arithmetic_intensity = numpy.logspace(START, STOP, num=100, base=10)
+    arithmetic_intensity = numpy.logspace(START, STOP, num=N, base=10)
     # Hardware platforms
     platforms = [p[0] for p in hw_platforms]
 
@@ -84,24 +84,27 @@ def process(hw_platforms, sw_apps, xkcd):
     if xkcd:
         matplotlib.pyplot.xkcd()
     fig, axis = matplotlib.pyplot.subplots()
-    axis.set_xscale('log', base=10)
-    axis.set_yscale('log', base=10)
-    axis.set_xlabel('Arithmetic Intensity (FLOP/byte)', fontsize=12)
+    axis.set_xscale('log', basex=10)
+    axis.set_yscale('log', basey=10)
+    axis.set_xlabel('Arithmetic Intensity (FLOP/byte)', fontsize=14)
     axis.grid(True, which='both', color='gray', linestyle='-',linewidth=0.2)
 
-    matplotlib.pyplot.setp(axis, xticks=numpy.logspace(1,20,num=20,base=10),
+    #matplotlib.pyplot.setp(axis, xticks=numpy.logspace(1,20,num=20,base=10),
+    matplotlib.pyplot.setp(axis, xticks=arithmetic_intensity,
                            yticks=numpy.logspace(1, 20, num=20, base=10))
 
-    axis.set_ylabel("FLOP-rate (GFLOP/s)", fontsize=12)
-    axis.set_ylim(bottom=20, top=100500)
+    matplotlib.pyplot.yticks(fontsize=12)
+    matplotlib.pyplot.xticks(fontsize=12)
+    axis.set_ylabel("FLOP-rate (GFLOP/s)", fontsize=14)
+    axis.set_ylim(bottom=10, top=100500)
 
-    axis.set_title('Roofline Plot', fontsize=14)
+    #axis.set_title('Roofline Plot', fontsize=14)
 
     l1 = numpy.array((0.12,100))
     l2 = numpy.array((10,35))
     trans_angle = matplotlib.pyplot.gca().transData.transform_angles(numpy.array((75,)), l2.reshape((1,2)))[0]
-    #th1 = matplotlib.pyplot.text(l1[0],l1[1], ' HBM BW: 778 GB/s ', fontsize=10, rotation=trans_angle,rotation_mode='anchor')
-    #th2 = matplotlib.pyplot.text(20,10000, ' DP Peak: 7.66 TF/s ', fontsize=10)
+    th1 = matplotlib.pyplot.text(l1[0],l1[1], ' HBM BW: 778 GB/s ', fontsize=10, rotation=trans_angle,rotation_mode='anchor')
+    th2 = matplotlib.pyplot.text(20,10000, ' DP Peak: 7.66 TF/s ', fontsize=10)
     for idx, val in enumerate(platforms):
         axis.plot(arithmetic_intensity, achievable_performance[idx, 0:],
                      label=val)
@@ -112,7 +115,7 @@ def process(hw_platforms, sw_apps, xkcd):
             axis.plot(apps_intensity[idx], floprate[idx], label=val,
                          linestyle='-.', marker='o', color=color[idx])
 
-    axis.legend(loc='upper left', prop={'size': 8})
+    axis.legend(loc='upper left', prop={'size': 9})
     fig.tight_layout()
     #matplotlib.pyplot.show()
     matplotlib.pyplot.savefig('plot_roofline.png', dpi=500 )

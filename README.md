@@ -1,3 +1,11 @@
+# Roofline
+
+This is a very simple script to plot roofline plots based upon https://github.com/mohamed/roofline. Example files are included 
+
+## Requirements 
+
+ - Python 3.6 or greater with: numpy and matplotlib
+
 ## apps.csv 
 
 This file contains the application you have data from that you wish to plot. The file is structured as:
